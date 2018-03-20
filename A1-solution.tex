@@ -6,8 +6,35 @@
 \usepackage{amsmath}
 \usepackage{float}
 \usepackage{hyperref}
+\usepackage{amssymb}
 \usepackage[nodisplayskipstretch]{setspace}
 \setstretch{0.5}
+\usepackage{listings}
+\usepackage{color}
+ 
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+ 
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
 
 \title{MAST30013 - Techniques in Operations Research: Assignment 1}
 \author{Shreyash Patodia (767336)}
@@ -358,34 +385,176 @@ $
 f(x) = (2x − 1)^3 + 4(4 − 10x)^4
 $
 
-$f'(x) = 3(2x - 1)^2 + 16(4 - 10x)^3$
+We can find $f'(x)$ to be as follows:
 
-Now, let  $a = 0$ and $T = 1$ such that, 
+$f'(x) = 6(2x - 1)^2  - 1280(2 - 5x)^3$ 
+
+The above functions $f$ and  $f'$ are a combination of two polynomials and polynomials are continuous for all real numbers, so the functions are continuous for all real numbers.
+
+First we need to find a t that satisfies the Armijo-Goldstein condition and the Wolfe condition so that we can find an interval where the solution might lie in. Since, $\sigma \in [0, 1]$ we can assume it to be $0.5$, similarly $\mu \in [\sigma, 1)$ so we can let $\sigma = 0.75$.  Set $t_{lo} = 0$ and $t_{hi} = \infty$ and $t = 1$
 
 \begin{equation}
-p = a = 0
+f(0) = 1023
 \end{equation}
 
 \begin{equation}
-q = a + T = 1
+f(t) = f(1) =  5185
 \end{equation}
 
 \begin{equation}
-f(p) = -1 + 1024 = 1023
+f(t) > f(0) + t{\sigma}f'(0) = -4094
+\end{equation}
+
+So, $t_{hi} = 1$, $t = \dfrac{1}{2}(t_{lo} + t_{hi}) = \dfrac{1}{2}$. Now, 
+
+\begin{equation}
+f(t) = f(0.5) = 4
 \end{equation}
 
 \begin{equation}
-f(q) = 1 + 5184  = 5185
+f(0) + t{\sigma}f'(0) = −1536
+\end{equation}
+
+\begin{equation}
+\therefore f(t) > f(0) + t{\sigma}f'(0)
+\end{equation}
+
+So, $t_{hi} = 0.5$, $t = \dfrac{1}{2}(t_{lo} + t_{hi}) = \dfrac{1}{4}$. Now, 
+
+\begin{equation}
+f(t) = f(0.25) = 20.1250
+\end{equation}
+
+\begin{equation}
+f(0) + t{\sigma}f'(0) = −256.25
+\end{equation}
+
+\begin{equation}
+\therefore f(t) > f(0) + t{\sigma}f'(0)
+\end{equation}
+
+So, $t_{hi} = 0.25$, $t = \dfrac{1}{2}(t_{lo} + t_{hi}) = \dfrac{1}{8}$. Now, 
+
+\begin{equation}
+f(t) = f(0.125) = 228.3438
+\end{equation}
+
+\begin{equation}
+f(0) + t{\sigma}f'(0) = 383
+\end{equation}
+
+\begin{equation}
+\therefore f(t) < f(0) + t{\sigma}f'(0)
+\end{equation}
+
+\begin{equation}
+f'(t) = f'(0.125) = -3324
+\end{equation}
+
+\begin{equation}
+{\mu}f'(0) = -7676
+\end{equation}
+
+\begin{equation}
+\therefore f'(t) > {\mu}f'(0)
+\end{equation}
+
+Since, $f'(t) > {\mu}f'(0)$  we can stop and choose the step size to be $t = 0.125$. 
+
+Also, $f'(x) = 6(2x - 1)^2  - 1280(2 - 5x)^3$  has only one real root so the function has to be unimodal from the graph below:
+
+\begin{figure}[!htbp]
+\begin{center}
+\includegraphics[scale=0.75]{problem-3.png}
+\end{center}
+\caption{Plot of $f(x) = 8e^{1 -x} + 7log(x)$ in the interval $[1, 2]$:}\label{exampleplot}
+\end{figure}
+
+Now, we want to use this step size to find an interval in which we can apply the Method of False Position. Now, because the interval in unbounded, we need to bound it in at least one direction first. Let us set $a = 0$ and with $t = 0.125$ we get: 
+
+\begin{equation}
+f(a) = f(0) = 1023
+\end{equation}
+\begin{equation}
+f(a + T) = f(0.125) = 228.3438
+\end{equation}
+
+Since, $f(a) > f(a + T)$ we can close the interval on the left and use $[0, \infty)$ as our starting point. 
+
+Now, finally we need to find an interval to apply Method of False Position by finding a suitable interval. I will use the method of increasing by a factor of t each time since a lot of the relevant calculations have been done above and wouldn't need to be done again. Here we start from 0 and $t = 0.125$
+
+\begin{equation}
+f(0) = 1023
+\end{equation}
+
+\begin{equation}
+f(t) = f(0.125) = 228.3438
+\end{equation}
+
+\begin{equation}
+f(2t) = f(0.25) = 20.1250
+\end{equation}
+
+\begin{equation}
+f(3t) = f(0.375) = 0
+\end{equation}
+
+\begin{equation}
+f(4t) = f(0.500) = 4
+\end{equation}
+
+Since we know that $2t = 0.25$ is in the decreasing branch and $4t = 0.5$ is in the increasing branch we can use this as our interval to find the answer. So interval = $[0.25, 0.50]$.
+
+We can put this in our code to find the answer: 
+
+\begin{lstlisting}[language=Octave]
+
+function val = F(x)
+val = (2 * x - 1)^3 + 4 * (4 - 10 * x)^4
+
+function val = Fprime(x)
+val = 6 * (2 * x - 1)^2 - 1280 * (2 - 5 * x)^3
+
+function [root, val, iterations] = FalsePosition(fprime, a, b, epsilon)
+format long g
+k = 1
+ga = feval(fprime, a)
+gb = feval(fprime, b)
+p = a + ((b - a) * ga)/(ga - gb)
+gp = feval(fprime, p)
+
+while abs(gp) > epsilon
+    if gp < 0
+        a = p
+    else
+        b = p
+    end
+    p = a + ((b - a) * ga)/(ga - gb)
+    gp = feval(fprime, p)
+    k = k + 1
+end
+
+root = p
+val = gp
+iterations = k
+
+\end{lstlisting}
+
+The above code gives the solution:
+
+\begin{equation}
+root = 0.387627049693125
 \end{equation}
 
 
+\begin{equation}
+val = -3.47558047975038e-06
+\end{equation}
 
+\begin{equation}
+iterations = 25
+\end{equation}
 
-
-
-
-
-
-
+The value observed above is within the tolerance. 
 
 \end{document}
